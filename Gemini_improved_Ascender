@@ -1,0 +1,1738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ascender</title>
+    <style>
+        /* Header Feedback button (larger, less rounded) */
+        .feedback-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 14px;
+            min-height: 40px;
+            background: linear-gradient(180deg, rgba(26,26,37,0.9) 0%, rgba(18,18,26,0.95) 100%);
+            border: 1px solid rgba(255,255,255,0.06);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .feedback-btn:hover {
+            background: linear-gradient(180deg, rgba(60,40,20,0.95) 0%, rgba(30,20,10,1) 100%);
+            border: 1px solid rgba(255,255,255,0.45);
+            box-shadow: 0 10px 28px rgba(0,0,0,0.6);
+            transform: translateY(-1px);
+        }
+        .feedback-btn .icon { width: 20px; height: 20px; fill: white; }
+    </style>
+</head>
+<body>
+
+</body>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ascender - Personal Development System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'void': '#0a0a0f',
+                        'void-light': '#12121a',
+                        'void-lighter': '#1a1a25',
+                        'aether': '#00d4ff',
+                        'aether-dark': '#0099cc',
+                        'discipline': '#ffa500',
+                        'mind': '#a855f7',
+                        'strength': '#ef4444',
+                        'vitality': '#22c55e',
+                        'gold': '#ffd700',
+                    },
+                    fontFamily: {
+                        'orbitron': ['Orbitron', 'sans-serif'],
+                        'rajdhani': ['Rajdhani', 'sans-serif'],
+                        'mono': ['Share Tech Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { scrollbar-width: thin; scrollbar-color: #00d4ff #1a1a25; }
+        *::-webkit-scrollbar { width: 8px; }
+        *::-webkit-scrollbar-track { background: #1a1a25; }
+        *::-webkit-scrollbar-thumb { background: #00d4ff; border-radius: 4px; }
+
+        /* Tier Colors */
+        .tier-bronze { color: #cd7f32; text-shadow: 0 0 10px rgba(205, 127, 50, 0.5); }
+        .tier-silver { color: #c0c0c0; text-shadow: 0 0 10px rgba(192, 192, 192, 0.5); }
+        .tier-gold { color: #ffd700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+        .tier-platinum { color: #e5e4e2; text-shadow: 0 0 15px rgba(229, 228, 226, 0.7); }
+        .tier-diamond { color: #b9f2ff; text-shadow: 0 0 20px rgba(185, 242, 255, 0.8); }
+        .tier-emerald { color: #50c878; text-shadow: 0 0 25px rgba(80, 200, 120, 0.9); }
+
+        .tier-badge-bronze { background: linear-gradient(135deg, #cd7f32, #8b4513); }
+        .tier-badge-silver { background: linear-gradient(135deg, #c0c0c0, #808080); }
+        .tier-badge-gold { background: linear-gradient(135deg, #ffd700, #daa520); }
+        .tier-badge-platinum { background: linear-gradient(135deg, #e5e4e2, #a9a9a9); }
+        .tier-badge-diamond { background: linear-gradient(135deg, #b9f2ff, #87ceeb); }
+        .tier-badge-emerald { background: linear-gradient(135deg, #50c878, #2e8b57); }
+
+        .tier-border-bronze { border-color: #cd7f32 !important; box-shadow: 0 0 15px rgba(205, 127, 50, 0.3); }
+        .tier-border-silver { border-color: #c0c0c0 !important; box-shadow: 0 0 15px rgba(192, 192, 192, 0.3); }
+        .tier-border-gold { border-color: #ffd700 !important; box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); }
+        .tier-border-platinum { border-color: #e5e4e2 !important; box-shadow: 0 0 25px rgba(229, 228, 226, 0.5); }
+        .tier-border-diamond { border-color: #b9f2ff !important; box-shadow: 0 0 30px rgba(185, 242, 255, 0.6); }
+        .tier-border-emerald { border-color: #50c878 !important; box-shadow: 0 0 35px rgba(80, 200, 120, 0.7); }
+
+        /* Momentum Heat Flame */
+        .flame-container { position: relative; display: inline-flex; align-items: center; }
+        .flame { font-size: 1.25rem; transition: all 0.3s ease; }
+        .flame svg, .flame-svg { width: 1.25rem; height: 1.25rem; display: inline-block; vertical-align: middle; pointer-events: none; fill: currentColor; }
+        .flame-cold { color: #4a5568; opacity: 0.5; }
+        .flame-warm { color: #f6ad55; animation: flicker 0.5s ease-in-out infinite alternate; }
+        .flame-hot { color: #ed8936; animation: flicker 0.3s ease-in-out infinite alternate; }
+        .flame-burning { color: #e53e3e; animation: flicker 0.2s ease-in-out infinite alternate, pulse-flame 1s ease-in-out infinite; }
+        .flame-blazing { color: #9f7aea; animation: flicker 0.15s ease-in-out infinite alternate, pulse-flame 0.5s ease-in-out infinite, rainbow-flame 2s linear infinite; }
+
+        @keyframes flicker { 0% { transform: scale(1) rotate(-3deg); } 100% { transform: scale(1.15) rotate(3deg); } }
+        @keyframes pulse-flame { 0%, 100% { filter: drop-shadow(0 0 5px currentColor); } 50% { filter: drop-shadow(0 0 15px currentColor) drop-shadow(0 0 25px currentColor); } }
+        @keyframes rainbow-flame { 0% { color: #9f7aea; } 25% { color: #ed64a6; } 50% { color: #f6ad55; } 75% { color: #48bb78; } 100% { color: #9f7aea; } }
+
+        .locked-feature { opacity: 0.4; cursor: not-allowed; }
+        .locked-overlay { position: relative; }
+        .locked-overlay::before { content: '🔒 SILVER TIER REQUIRED'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.7); font-size: 0.75rem; color: #c0c0c0; font-weight: bold; border-radius: inherit; z-index: 10; }
+
+        .glow-aether { box-shadow: 0 0 20px rgba(0, 212, 255, 0.3), inset 0 0 20px rgba(0, 212, 255, 0.1); }
+        .glow-discipline { box-shadow: 0 0 20px rgba(255, 165, 0, 0.3), inset 0 0 20px rgba(255, 165, 0, 0.1); }
+        .glow-mind { box-shadow: 0 0 20px rgba(168, 85, 247, 0.3), inset 0 0 20px rgba(168, 85, 247, 0.1); }
+        .glow-strength { box-shadow: 0 0 20px rgba(239, 68, 68, 0.3), inset 0 0 20px rgba(239, 68, 68, 0.1); }
+        .glow-vitality { box-shadow: 0 0 20px rgba(34, 197, 94, 0.3), inset 0 0 20px rgba(34, 197, 94, 0.1); }
+
+        .text-glow-aether { text-shadow: 0 0 10px rgba(0, 212, 255, 0.5); }
+        .chamber-card { background: linear-gradient(180deg, rgba(26, 26, 37, 0.9) 0%, rgba(18, 18, 26, 0.95) 100%); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .progress-ring { transform: rotate(-90deg); }
+        .streak-fire { animation: fire 0.5s ease-in-out infinite alternate; }
+        @keyframes fire { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
+        .slide-in { animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .modal-backdrop { backdrop-filter: blur(10px); }
+        .timer-circle { stroke-dasharray: 553; stroke-dashoffset: 0; transition: stroke-dashoffset 1s linear; }
+        input[type="range"] { -webkit-appearance: none; background: transparent; }
+        input[type="range"]::-webkit-slider-track { height: 8px; background: #1a1a25; border-radius: 4px; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; background: #00d4ff; border-radius: 50%; cursor: pointer; margin-top: -6px; }
+    </style>
+</head>
+<body class="bg-void text-white font-rajdhani min-h-screen">
+    <div id="app" class="flex flex-col min-h-screen">
+        <!-- Top Navigation -->
+        <header class="bg-void-light border-b border-white/10 px-4 py-3 flex items-center justify-between sticky top-0 z-50">
+            <div class="flex items-center gap-4">
+                <h1 class="font-orbitron text-2xl font-bold text-aether text-glow-aether">ASCENDER</h1>
+                <div class="hidden md:flex items-center gap-2 bg-void-lighter px-3 py-1 rounded-full">
+                    <span id="topStreak" class="font-mono text-sm">0 Day Streak</span>
+                </div>
+                <!-- Momentum Heat -->
+                <div class="hidden md:flex items-center gap-2 bg-void-lighter px-3 py-1.5 rounded-full cursor-pointer hover:bg-void transition-all" onclick="showHeatInfo()">
+                    <div class="flame-container">
+                        <span id="momentumFlame" class="flame flame-cold"><svg class="flame-svg" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 2s-4 3-4 7a4 4 0 0 0 4 4 4 4 0 0 0 4-4c0-4-4-7-4-7z" fill="currentColor"/></svg></span>
+                    </div>
+                    <div class="flex flex-col leading-tight">
+                        <span id="heatLevel" class="font-mono text-xs font-bold text-gray-400">Cold</span>
+                        <span id="heatStreak" class="font-mono text-[10px] text-gray-500">0 days</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="hidden md:flex items-center gap-2 bg-gradient-to-r from-blue-900/50 to-purple-900/50 px-3 py-1 rounded-full border border-blue-500/30">
+                    <span>❄️</span>
+                    <span class="text-sm">Winter Event</span>
+                </div>
+                <a href="mailto:luka.beradze.mail@gmail.com?subject=Ascender%20Feedback" class="feedback-btn hidden md:inline-flex items-center gap-2 px-3 py-1 rounded-full transition-all border border-white/10">
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"/></svg>
+                    <span class="text-sm">Feedback</span>
+                </a>
+                <button onclick="openModal('profileModal')" class="flex items-center gap-2 bg-void-lighter hover:bg-void px-3 py-2 rounded-lg transition-all">
+                    <div id="userAvatarHeader" class="w-8 h-8 bg-gradient-to-br from-aether to-purple-500 rounded-full flex items-center justify-center font-bold border-2 tier-border-bronze">
+                        <span id="userInitial">A</span>
+                    </div>
+                    <span id="userName" class="hidden md:inline">Ascender</span>
+                </button>
+                <button onclick="openModal('settingsModal')" class="p-2 hover:bg-void-lighter rounded-lg transition-all">⚙️</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col md:flex-row">
+            <!-- Sidebar - Desktop -->
+            <aside class="hidden md:flex flex-col w-64 bg-void-light border-r border-white/10 p-4">
+                <div id="sidebarCard" class="chamber-card rounded-xl p-4 mb-4 border-2 tier-border-bronze">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div id="sidebarAvatar" class="w-12 h-12 bg-gradient-to-br from-aether to-purple-500 rounded-full flex items-center justify-center font-bold text-xl border-2 tier-border-bronze">
+                            <span id="sidebarInitial">A</span>
+                        </div>
+                        <div>
+                            <h3 id="sidebarName" class="font-orbitron font-bold">Ascender</h3>
+                            <p id="sidebarRank" class="text-xs text-gray-400">Bronze Tier</p>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-gray-400">Tier Progress</span>
+                            <span id="tierProgressText" class="text-gray-400">0 / 500 XP</span>
+                        </div>
+                        <div class="h-2 bg-void rounded-full overflow-hidden">
+                            <div id="tierProgressBar" class="h-full bg-gradient-to-r from-yellow-600 to-yellow-400 transition-all" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-center text-sm">
+                        <div class="bg-void rounded-lg p-2">
+                            <div id="sidebarLevel" class="font-orbitron text-aether font-bold">1</div>
+                            <div class="text-gray-500 text-xs">LEVEL</div>
+                        </div>
+                        <div class="bg-void rounded-lg p-2">
+                            <div id="sidebarAether" class="font-orbitron text-gold font-bold">0</div>
+                            <div class="text-gray-500 text-xs">AETHER</div>
+                        </div>
+                    </div>
+                </div>
+
+                <nav class="flex-1 space-y-2">
+                    <button onclick="switchChamber('discipline')" class="chamber-nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-discipline/20 transition-all text-left" data-chamber="discipline">
+                        <span class="text-xl">🎯</span>
+                        <div>
+                            <div class="font-semibold text-discipline">Discipline</div>
+                            <div class="text-xs text-gray-500">Routine & Habits</div>
+                        </div>
+                    </button>
+                    <button onclick="switchChamber('mind')" class="chamber-nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-mind/20 transition-all text-left" data-chamber="mind">
+                        <span class="text-xl">🧠</span>
+                        <div>
+                            <div class="font-semibold text-mind">Mind</div>
+                            <div class="text-xs text-gray-500">Focus & Learning</div>
+                        </div>
+                    </button>
+                    <button onclick="switchChamber('strength')" class="chamber-nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-strength/20 transition-all text-left" data-chamber="strength">
+                        <span class="text-xl">💪</span>
+                        <div>
+                            <div class="font-semibold text-strength">Strength</div>
+                            <div class="text-xs text-gray-500">Physical Power</div>
+                        </div>
+                    </button>
+                    <button onclick="switchChamber('vitality')" class="chamber-nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-vitality/20 transition-all text-left" data-chamber="vitality">
+                        <span class="text-xl">💚</span>
+                        <div>
+                            <div class="font-semibold text-vitality">Vitality</div>
+                            <div class="text-xs text-gray-500">Wellness & Health</div>
+                        </div>
+                    </button>
+
+                    <div class="border-t border-white/10 my-4"></div>
+
+                    <!-- The Forge (Locked until Silver) -->
+                    <button id="forgeBtn" onclick="switchChamber('forge')" class="chamber-nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-orange-500/20 transition-all text-left" data-chamber="forge">
+                        <span class="text-xl">⚒️</span>
+                        <div>
+                            <div class="font-semibold text-orange-400">The Forge</div>
+                            <div class="text-xs text-gray-500">Craft & Upgrade</div>
+                        </div>
+                    </button>
+
+                    <button onclick="switchChamber('nofap')" class="chamber-nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-purple-500/20 transition-all text-left" data-chamber="nofap">
+                        <span class="text-xl">🛡️</span>
+                        <div>
+                            <div class="font-semibold text-purple-400">NoFap</div>
+                            <div class="text-xs text-gray-500">Self Mastery</div>
+                        </div>
+                    </button>
+                    <button onclick="switchChamber('schedule')" class="chamber-nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-blue-500/20 transition-all text-left" data-chamber="schedule">
+                        <span class="text-xl">📅</span>
+                        <div>
+                            <div class="font-semibold text-blue-400">Schedule</div>
+                            <div class="text-xs text-gray-500">Weekly Planning</div>
+                        </div>
+                    </button>
+                    <button onclick="switchChamber('analytics')" class="chamber-nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-cyan-500/20 transition-all text-left" data-chamber="analytics">
+                        <span class="text-xl">📊</span>
+                        <div>
+                            <div class="font-semibold text-cyan-400">Analytics</div>
+                            <div class="text-xs text-gray-500">Progress Reports</div>
+                        </div>
+                    </button>
+                </nav>
+
+                <div class="mt-4 p-3 bg-void rounded-lg border border-white/5">
+                    <p id="motivationalQuote" class="text-xs text-gray-400 italic">"The only way to do great work is to love what you do."</p>
+                </div>
+            </aside>
+
+            <!-- Chamber Content -->
+            <div class="flex-1 p-4 md:p-6 overflow-y-auto">
+                <!-- Home/Dashboard -->
+                <div id="homeChamber" class="chamber-content">
+                    <div class="max-w-6xl mx-auto">
+                        <!-- Welcome Header with Tier Styling -->
+                        <div id="welcomeCard" class="chamber-card rounded-xl p-6 mb-6 border-2 tier-border-bronze">
+                            <div class="flex flex-col md:flex-row items-center gap-6">
+                                <div id="homeAvatar" class="w-24 h-24 bg-gradient-to-br from-aether to-purple-500 rounded-full flex items-center justify-center font-orbitron text-4xl font-bold border-4 tier-border-bronze">
+                                    <span id="homeInitial">A</span>
+                                </div>
+                                <div class="flex-1 text-center md:text-left">
+                                    <h2 class="font-orbitron text-3xl font-bold">Welcome back, <span id="homeName" class="tier-bronze">Ascender</span>!</h2>
+                                    <p id="dailyQuote" class="text-gray-400 mt-1 italic text-sm">"Success is not final, failure is not fatal."</p>
+                                    <div class="flex items-center justify-center md:justify-start gap-2 mt-2">
+                                        <span id="tierBadge" class="px-3 py-1 rounded-full text-xs font-bold tier-badge-bronze text-void">BRONZE TIER</span>
+                                        <span id="homeRank" class="text-gray-400 text-sm">Novice Ascender</span>
+                                    </div>
+                                    <div class="flex flex-wrap justify-center md:justify-start gap-4 mt-4">
+                                        <div class="bg-void px-4 py-2 rounded-lg">
+                                            <span class="text-gray-400 text-sm">Level</span>
+                                            <span id="homeLevel" class="ml-2 font-orbitron font-bold text-aether">1</span>
+                                        </div>
+                                        <div class="bg-void px-4 py-2 rounded-lg">
+                                            <span class="text-gray-400 text-sm">Aether</span>
+                                            <span id="homeAether" class="ml-2 font-orbitron font-bold text-gold">0</span>
+                                        </div>
+                                        <div class="bg-void px-4 py-2 rounded-lg">
+                                            <span class="text-gray-400 text-sm">Heat</span>
+                                            <span id="homeHeat" class="ml-2 font-orbitron font-bold text-orange-400">Cold</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Stats Panel -->
+                        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+                            <div class="chamber-card rounded-xl p-4 text-center border-l-4 border-vitality">
+                                <div class="text-vitality font-semibold text-sm">Vitality</div>
+                                <div id="statVitality" class="font-orbitron text-xl font-bold">Lvl.1</div>
+                                <div class="text-gray-500 text-xs"><span id="statVitalityExp">0</span> EXP</div>
+                            </div>
+                            <div class="chamber-card rounded-xl p-4 text-center border-l-4 border-discipline">
+                                <div class="text-discipline font-semibold text-sm">Discipline</div>
+                                <div id="statDiscipline" class="font-orbitron text-xl font-bold">Lvl.1</div>
+                                <div class="text-gray-500 text-xs"><span id="statDisciplineExp">0</span> EXP</div>
+                            </div>
+                            <div class="chamber-card rounded-xl p-4 text-center border-l-4 border-mind">
+                                <div class="text-mind font-semibold text-sm">Intelligence</div>
+                                <div id="statIntelligence" class="font-orbitron text-xl font-bold">Lvl.1</div>
+                                <div class="text-gray-500 text-xs"><span id="statIntelligenceExp">0</span> EXP</div>
+                            </div>
+                            <div class="chamber-card rounded-xl p-4 text-center border-l-4 border-blue-400">
+                                <div class="text-blue-400 font-semibold text-sm">Practical</div>
+                                <div id="statPractical" class="font-orbitron text-xl font-bold">Lvl.1</div>
+                                <div class="text-gray-500 text-xs"><span id="statPracticalExp">0</span> EXP</div>
+                            </div>
+                            <div class="chamber-card rounded-xl p-4 text-center border-l-4 border-strength">
+                                <div class="text-strength font-semibold text-sm">Strength</div>
+                                <div id="statStrength" class="font-orbitron text-xl font-bold">Lvl.1</div>
+                                <div class="text-gray-500 text-xs"><span id="statStrengthExp">0</span> EXP</div>
+                            </div>
+                        </div>
+
+                        <!-- Chamber Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div onclick="switchChamber('discipline')" class="chamber-card rounded-xl p-6 cursor-pointer hover:glow-discipline transition-all group">
+                                <div class="flex items-center gap-4 mb-4">
+                                    <span class="text-4xl">🎯</span>
+                                    <div>
+                                        <h3 class="font-orbitron text-xl font-bold text-discipline">Discipline</h3>
+                                        <p class="text-gray-400 text-sm">Routine & Habits</p>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <span class="text-gray-400 text-sm">Streak:</span>
+                                        <span id="homeDisciplineStreak" class="ml-2 font-bold text-orange-400">0 days</span>
+                                    </div>
+                                    <span class="text-gray-500 group-hover:text-discipline transition-all">→</span>
+                                </div>
+                            </div>
+                            <div onclick="switchChamber('mind')" class="chamber-card rounded-xl p-6 cursor-pointer hover:glow-mind transition-all group">
+                                <div class="flex items-center gap-4 mb-4">
+                                    <span class="text-4xl">🧠</span>
+                                    <div>
+                                        <h3 class="font-orbitron text-xl font-bold text-mind">Mind</h3>
+                                        <p class="text-gray-400 text-sm">Focus & Learning</p>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <span class="text-gray-400 text-sm">Study Streak:</span>
+                                        <span id="homeMindStreak" class="ml-2 font-bold text-orange-400">0 days</span>
+                                    </div>
+                                    <span class="text-gray-500 group-hover:text-mind transition-all">→</span>
+                                </div>
+                            </div>
+                            <div onclick="switchChamber('strength')" class="chamber-card rounded-xl p-6 cursor-pointer hover:glow-strength transition-all group">
+                                <div class="flex items-center gap-4 mb-4">
+                                    <span class="text-4xl">💪</span>
+                                    <div>
+                                        <h3 class="font-orbitron text-xl font-bold text-strength">Strength</h3>
+                                        <p class="text-gray-400 text-sm">Physical Power</p>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <span class="text-gray-400 text-sm">Streak:</span>
+                                        <span id="homeStrengthStreak" class="ml-2 font-bold text-orange-400">0 days</span>
+                                    </div>
+                                    <span class="text-gray-500 group-hover:text-strength transition-all">→</span>
+                                </div>
+                            </div>
+                            <div onclick="switchChamber('vitality')" class="chamber-card rounded-xl p-6 cursor-pointer hover:glow-vitality transition-all group">
+                                <div class="flex items-center gap-4 mb-4">
+                                    <span class="text-4xl">💚</span>
+                                    <div>
+                                        <h3 class="font-orbitron text-xl font-bold text-vitality">Vitality</h3>
+                                        <p class="text-gray-400 text-sm">Wellness & Health</p>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <span class="text-gray-400 text-sm">Wellness Streak:</span>
+                                        <span id="homeVitalityStreak" class="ml-2 font-bold text-orange-400">0 days</span>
+                                    </div>
+                                    <span class="text-gray-500 group-hover:text-vitality transition-all">→</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Today's Overview -->
+                        <div class="chamber-card rounded-xl p-6 mt-6">
+                            <h3 class="font-orbitron text-xl font-bold text-aether mb-4">TODAY'S OVERVIEW</h3>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div class="bg-void rounded-lg p-4 text-center">
+                                    <div id="todayHabitsCompleted" class="font-orbitron text-2xl font-bold text-green-400">0</div>
+                                    <div class="text-gray-500 text-sm">Habits Done</div>
+                                </div>
+                                <div class="bg-void rounded-lg p-4 text-center">
+                                    <div id="todayFocusMinutes" class="font-orbitron text-2xl font-bold text-mind">0</div>
+                                    <div class="text-gray-500 text-sm">Focus Minutes</div>
+                                </div>
+                                <div class="bg-void rounded-lg p-4 text-center">
+                                    <div id="todayExpEarned" class="font-orbitron text-2xl font-bold text-aether">0</div>
+                                    <div class="text-gray-500 text-sm">EXP Earned</div>
+                                </div>
+                                <div class="bg-void rounded-lg p-4 text-center">
+                                    <div id="todayWaterGlasses" class="font-orbitron text-2xl font-bold text-blue-400">0/8</div>
+                                    <div class="text-gray-500 text-sm">Water</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Discipline Chamber -->
+                <div id="disciplineChamber" class="chamber-content hidden">
+                    <div class="max-w-4xl mx-auto">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+                            <div>
+                                <h2 class="font-orbitron text-3xl font-bold text-discipline flex items-center gap-3">🎯 DISCIPLINE CHAMBER</h2>
+                                <p class="text-gray-400 mt-1">Master your daily routines and build unbreakable habits</p>
+                            </div>
+                            <button onclick="switchChamber('home')" class="bg-void-lighter hover:bg-void border border-white/10 px-4 py-2 rounded-lg transition-all text-sm">← RETURN TO SYSTEM</button>
+                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+                            <div class="chamber-card rounded-xl p-4 text-center glow-discipline">
+                                <div id="disciplineProgress" class="font-orbitron text-2xl font-bold text-discipline">0%</div>
+                                <div class="text-xs text-gray-500">TODAY'S PROGRESS</div>
+                            </div>
+                            <div class="chamber-card rounded-xl p-4 text-center">
+                                <div id="disciplineStreak" class="font-orbitron text-2xl font-bold text-orange-400">0</div>
+                                <div class="text-xs text-gray-500">STREAK</div>
+                            </div>
+                            <div class="chamber-card rounded-xl p-4 text-center">
+                                <div id="disciplinePerfectDays" class="font-orbitron text-2xl font-bold text-gold">0</div>
+                                <div class="text-xs text-gray-500">PERFECT DAYS</div>
+                            </div>
+                            <div class="chamber-card rounded-xl p-4 text-center">
+                                <div id="disciplineCompleted" class="font-orbitron text-2xl font-bold text-green-400">0</div>
+                                <div class="text-xs text-gray-500">COMPLETED TODAY</div>
+                            </div>
+                            <div class="chamber-card rounded-xl p-4 text-center">
+                                <div id="disciplineExp" class="font-orbitron text-2xl font-bold text-aether">0</div>
+                                <div class="text-xs text-gray-500">TOTAL EXP</div>
+                            </div>
+                        </div>
+                        <div id="perfectDayMessage" class="bg-discipline/10 border border-discipline/30 rounded-lg p-3 mb-6 text-center">
+                            <span class="text-discipline">Complete <span id="habitsRemaining">8</span> more habits for a perfect day</span>
+                        </div>
+                        <div class="chamber-card rounded-xl p-6 mb-6">
+                            <h3 class="font-orbitron text-xl font-bold text-yellow-400 mb-4 flex items-center gap-2">☀️ MORNING RITUALS</h3>
+                            <div id="morningHabits" class="space-y-3"></div>
+                            <button onclick="addHabit('morning')" class="mt-4 w-full bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/30 text-yellow-400 py-2 rounded-lg transition-all flex items-center justify-center gap-2">
+                                <span>+</span> Add Morning Ritual
+                            </button>
+                        </div>
+                        <div class="chamber-card rounded-xl p-6 mb-6">
+                            <h3 class="font-orbitron text-xl font-bold text-discipline mb-4 flex items-center gap-2">📋 DAILY DISCIPLINE</h3>
+                            <div id="dailyHabits" class="space-y-3"></div>
+                            <button onclick="addHabit('daily')" class="mt-4 w-full bg-discipline/10 hover:bg-discipline/20 border border-discipline/30 text-discipline py-2 rounded-lg transition-all flex items-center justify-center gap-2">
+                                <span>+</span> Add Daily Habit
+                            </button>
+                        </div>
+                        <div class="chamber-card rounded-xl p-6">
+                            <h3 class="font-orbitron text-xl font-bold text-indigo-400 mb-4 flex items-center gap-2">🌙 EVENING CLOSURE</h3>
+                            <div id="eveningHabits" class="space-y-3"></div>
+                            <button onclick="addHabit('evening')" class="mt-4 w-full bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 text-indigo-400 py-2 rounded-lg transition-all flex items-center justify-center gap-2">
+                                <span>+</span> Add Evening Ritual
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mind Chamber -->
+                <div id="mindChamber" class="chamber-content hidden">
+                    <div class="max-w-4xl mx-auto">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+                            <div>
+                                <h2 class="font-orbitron text-3xl font-bold text-mind flex items-center gap-3">🧠 MIND CHAMBER</h2>
+                                <p class="text-gray-400 mt-1">Sharpen your focus and expand your knowledge</p>
+                            </div>
+                            <button onclick="switchChamber('home')" class="bg-void-lighter hover:bg-void border border-white/10 px-4 py-2 rounded-lg transition-all text-sm">← RETURN TO SYSTEM</button>
+                        </div>
+                        <div class="chamber-card rounded-xl p-6 mb-6 glow-mind">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="font-orbitron text-xl font-bold text-mind">STUDY STREAK</h3>
+                                    <p class="text-gray-400 text-sm">Keep the momentum going!</p>
+                                </div>
+                                <div class="text-right">
+                                    <div id="studyStreak" class="font-orbitron text-4xl font-bold text-mind">0</div>
+                                    <div class="text-gray-500 text-sm">DAYS</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chamber-card rounded-xl p-6 mb-6">
+                            <h3 class="font-orbitron text-xl font-bold text-mind mb-6 flex items-center gap-2">⏱️ FOCUS TIMER</h3>
+                            <div class="flex flex-col items-center">
+                                <div class="relative mb-6">
+                                    <svg class="w-48 h-48">
+                                        <circle cx="96" cy="96" r="88" fill="none" stroke="#1a1a25" stroke-width="8"/>
+                                        <circle id="timerCircle" class="timer-circle" cx="96" cy="96" r="88" fill="none" stroke="#a855f7" stroke-width="8" stroke-linecap="round"/>
+                                    </svg>
+                                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                        <div id="timerDisplay" class="font-orbitron text-4xl font-bold text-mind">25:00</div>
+                                        <div id="timerMode" class="text-gray-400 text-sm">FOCUS MODE</div>
+                                    </div>
+                                </div>
+                                <div class="flex gap-4 mb-6">
+                                    <button onclick="startTimer()" id="timerStartBtn" class="bg-mind hover:bg-mind/80 text-white px-6 py-2 rounded-lg font-semibold transition-all">START</button>
+                                    <button onclick="resetTimer()" class="bg-void-lighter hover:bg-void border border-white/10 px-6 py-2 rounded-lg transition-all">RESET</button>
+                                    <button onclick="switchToBreak()" class="bg-green-500/20 hover:bg-green-500/30 text-green-400 border border-green-500/30 px-6 py-2 rounded-lg transition-all">TO BREAK</button>
+                                </div>
+                                <div class="flex gap-4 items-center">
+                                    <div class="flex items-center gap-2">
+                                        <label class="text-gray-400 text-sm">Work:</label>
+                                        <input type="number" id="workDuration" value="25" min="1" max="60" class="w-16 bg-void border border-white/10 rounded px-2 py-1 text-center">
+                                        <span class="text-gray-500 text-sm">min</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <label class="text-gray-400 text-sm">Break:</label>
+                                        <input type="number" id="breakDuration" value="5" min="1" max="30" class="w-16 bg-void border border-white/10 rounded px-2 py-1 text-center">
+                                        <span class="text-gray-500 text-sm">min</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chamber-card rounded-xl p-6">
+                            <h3 class="font-orbitron text-xl font-bold text-mind mb-4 flex items-center gap-2">📚 STUDY QUESTS</h3>
+                            <div id="studyQuests" class="space-y-3 mb-4">
+                                <div class="text-gray-500 text-center py-4">No quests loaded. Click 'LOAD QUESTS' to import.</div>
+                            </div>
+                            <div class="flex gap-2">
+                                <input type="text" id="newStudyQuest" placeholder="Add new study quest..." class="flex-1 bg-void border border-white/10 rounded-lg px-4 py-2">
+                                <button onclick="addStudyQuest()" class="bg-mind hover:bg-mind/80 text-white px-4 rounded-lg font-semibold transition-all">ADD</button>
+                                <button onclick="loadStudyQuests()" class="bg-void-lighter hover:bg-void border border-white/10 px-4 rounded-lg transition-all">LOAD</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Strength Chamber -->
+                <div id="strengthChamber" class="chamber-content hidden">
+                    <div class="max-w-4xl mx-auto">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+                            <div>
+                                <h2 class="font-orbitron text-3xl font-bold text-strength flex items-center gap-3">💪 STRENGTH CHAMBER</h2>
+                                <p class="text-gray-400 mt-1">Build your physical power and endurance</p>
+                            </div>
+                            <button onclick="switchChamber('home')" class="bg-void-lighter hover:bg-void border border-white/10 px-4 py-2 rounded-lg transition-all text-sm">← RETURN TO SYSTEM</button>
+                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                            <div class="chamber-card rounded-xl p-4 text-center glow-strength">
+                                <div id="strengthStreak" class="font-orbitron text-2xl font-bold text-strength">0</div>
+                                <div class="text-xs text-gray-500">STREAK DAYS</div>
+                            </div>
+                            <div class="chamber-card rounded-xl p-4 text-center">
+                                <div id="strengthCompleted" class="font-orbitron text-2xl font-bold text-green-400">0</div>
+                                <div class="text-xs text-gray-500">COMPLETED TODAY</div>
+                            </div>
+                            <div class="chamber-card rounded-xl p-4 text-center">
+                                <div id="strengthTotalStreak" class="font-orbitron text-2xl font-bold text-orange-400">0</div>
+                                <div class="text-xs text-gray-500">TOTAL STREAK</div>
+                            </div>
+                            <div class="chamber-card rounded-xl p-4 text-center">
+                                <div id="strengthExp" class="font-orbitron text-2xl font-bold text-aether">0</div>
+                                <div class="text-xs text-gray-500">TOTAL EXP</div>
+                            </div>
+                        </div>
+                        <div class="chamber-card rounded-xl p-6 mb-6">
+                            <h3 class="font-orbitron text-xl font-bold text-strength mb-4 flex items-center gap-2">🏋️ WORKOUT QUESTS</h3>
+                            <div id="workoutQuests" class="space-y-3 mb-4"></div>
+                            <div class="flex gap-2">
+                                <input type="text" id="newExerciseName" placeholder="Exercise name..." class="flex-1 bg-void border border-white/10 rounded-lg px-4 py-2">
+                                <input type="number" id="newExerciseReps" placeholder="Reps" value="20" min="1" class="w-20 bg-void border border-white/10 rounded-lg px-2 py-2 text-center">
+                                <button onclick="addWorkoutQuest()" class="bg-strength hover:bg-strength/80 text-white px-4 rounded-lg font-semibold transition-all">+</button>
+                            </div>
+                        </div>
+                        <div class="chamber-card rounded-xl p-6">
+                            <h3 class="font-orbitron text-xl font-bold text-strength mb-4 flex items-center gap-2">🍎 NUTRITION TRACKING</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="bg-void rounded-lg p-4">
+                                    <div class="text-gray-400 text-sm mb-2">Protein (g)</div>
+                                    <input type="number" id="proteinIntake" value="0" min="0" class="w-full bg-transparent text-2xl font-bold text-green-400 outline-none" onchange="updateNutrition()">
+                                </div>
+                                <div class="bg-void rounded-lg p-4">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-gray-400 text-sm">Water (glasses)</span>
+                                        <span id="waterProgress" class="text-blue-400">0/8</span>
+                                    </div>
+                                    <div id="waterGlasses" class="flex gap-1 flex-wrap"></div>
+                                    <button onclick="drinkWater()" class="mt-2 w-full bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border border-blue-500/30 py-2 rounded-lg transition-all text-sm">DRINK WATER (+1)</button>
+                                </div>
+                                <div class="bg-void rounded-lg p-4">
+                                    <div class="text-gray-400 text-sm mb-2">Body Type</div>
+                                    <select id="bodyType" class="w-full bg-transparent text-lg font-bold outline-none" onchange="saveUserData()">
+                                        <option value="Skinny">Skinny</option>
+                                        <option value="Skinny-Fat" selected>Skinny-Fat</option>
+                                        <option value="Average">Average</option>
+                                        <option value="Athletic">Athletic</option>
+                                        <option value="Muscular">Muscular</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vitality Chamber -->
+                <div id="vitalityChamber" class="chamber-content hidden">
+                    <div class="max-w-4xl mx-auto">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+                            <div>
+                                <h2 class="font-orbitron text-3xl font-bold text-vitality flex items-center gap-3">💚 VITALITY CHAMBER</h2>
+                                <p class="text-gray-400 mt-1">Nurture your wellness and inner peace</p>
+                            </div>
+                            <button onclick="switchChamber('home')" class="bg-void-lighter hover:bg-void border border-white/10 px-4 py-2 rounded-lg transition-all text-sm">← RETURN TO SYSTEM</button>
+                        </div>
+                        <div class="chamber-card rounded-xl p-6 mb-6 glow-vitality">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="font-orbitron text-xl font-bold text-vitality">WELLNESS STREAK</h3>
+                                    <p class="text-gray-400 text-sm">Stay consistent with your wellness journey</p>
+                                </div>
+                                <div class="text-right">
+                                    <div id="wellnessStreak" class="font-orbitron text-4xl font-bold text-vitality">0</div>
+                                    <div class="text-gray-500 text-sm">DAYS</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chamber-card rounded-xl p-6 mb-6">
+                            <h3 class="font-orbitron text-xl font-bold text-yellow-400 mb-4 flex items-center gap-2">😊 MOOD & ENERGY</h3>
+                            <div class="mb-4">
+                                <label class="text-gray-400 text-sm">How are you feeling today?</label>
+                                <div id="moodSelector" class="flex justify-around mt-4">
+                                    <button onclick="selectMood(1)" class="mood-btn text-3xl p-2 rounded-lg transition-all hover:bg-white/10" data-mood="1">😢</button>
+                                    <button onclick="selectMood(2)" class="mood-btn text-3xl p-2 rounded-lg transition-all hover:bg-white/10" data-mood="2">😔</button>
+                                    <button onclick="selectMood(3)" class="mood-btn text-3xl p-2 rounded-lg transition-all hover:bg-white/10" data-mood="3">😐</button>
+                                    <button onclick="selectMood(4)" class="mood-btn text-3xl p-2 rounded-lg transition-all hover:bg-white/10" data-mood="4">🙂</button>
+                                    <button onclick="selectMood(5)" class="mood-btn text-3xl p-2 rounded-lg transition-all hover:bg-white/10" data-mood="5">😊</button>
+                                    <button onclick="selectMood(6)" class="mood-btn text-3xl p-2 rounded-lg transition-all hover:bg-white/10" data-mood="6">😄</button>
+                                    <button onclick="selectMood(7)" class="mood-btn text-3xl p-2 rounded-lg transition-all hover:bg-white/10" data-mood="7">🤩</button>
+                                </div>
+                                <div id="moodLabel" class="text-center mt-2 text-gray-400">Balanced</div>
+                            </div>
+                        </div>
+                        <div class="chamber-card rounded-xl p-6 mb-6">
+                            <h3 class="font-orbitron text-xl font-bold text-pink-400 mb-4 flex items-center gap-2">🙏 GRATITUDE PRACTICE</h3>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-gray-400">Daily Gratitudes</span>
+                                <span id="gratitudeCount" class="text-pink-400">0/5</span>
+                            </div>
+                            <div id="gratitudeList" class="space-y-2 mb-4"></div>
+                            <div class="flex gap-2">
+                                <input type="text" id="newGratitude" placeholder="Something you're grateful for..." class="flex-1 bg-void border border-white/10 rounded-lg px-4 py-2">
+                                <button onclick="addGratitude()" class="bg-pink-500/20 hover:bg-pink-500/30 text-pink-400 border border-pink-500/30 px-4 rounded-lg transition-all">ADD</button>
+                            </div>
+                        </div>
+                        <div class="chamber-card rounded-xl p-6">
+                            <h3 class="font-orbitron text-xl font-bold text-purple-400 mb-4 flex items-center gap-2">🧘 MEDITATION LOG</h3>
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <div class="bg-void rounded-lg p-4 text-center">
+                                    <div id="meditationMinutes" class="font-orbitron text-3xl font-bold text-purple-400">0</div>
+                                    <div class="text-gray-500 text-sm">MINUTES TODAY</div>
+                                </div>
+                                <div class="bg-void rounded-lg p-4 text-center">
+                                    <div id="mindfulStreak" class="font-orbitron text-3xl font-bold text-purple-400">0</div>
+                                    <div class="text-gray-500 text-sm">MINDFUL STREAK</div>
+                                </div>
+                            </div>
+                            <div class="flex gap-2">
+                                <input type="number" id="meditationDuration" placeholder="Minutes" min="1" value="10" class="w-24 bg-void border border-white/10 rounded-lg px-4 py-2 text-center">
+                                <button onclick="logMeditation()" class="flex-1 bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 border border-purple-500/30 py-2 rounded-lg transition-all">LOG SESSION</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- The Forge Chamber -->
+                <div id="forgeChamber" class="chamber-content hidden">
+                    <div class="max-w-4xl mx-auto">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+                            <div>
+                                <h2 class="font-orbitron text-3xl font-bold text-orange-400 flex items-center gap-3">⚒️ THE FORGE</h2>
+                                <p class="text-gray-400 mt-1">Craft powerful upgrades and unlock new abilities</p>
+                            </div>
+                            <button onclick="switchChamber('home')" class="bg-void-lighter hover:bg-void border border-white/10 px-4 py-2 rounded-lg transition-all text-sm">← RETURN TO SYSTEM</button>
+                        </div>
+                        <div class="chamber-card rounded-xl p-6 mb-6" style="box-shadow: 0 0 30px rgba(251, 146, 60, 0.3);">
+                            <div class="text-center mb-6">
+                                <div class="text-6xl mb-4">⚒️</div>
+                                <h3 class="font-orbitron text-2xl font-bold text-orange-400 mb-2">WELCOME TO THE FORGE</h3>
+                                <p class="text-gray-400">Use your Aether to craft powerful upgrades</p>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-void rounded-xl p-4 border border-orange-500/30">
+                                    <h4 class="font-orbitron text-lg font-bold text-orange-400 mb-2">🎯 HABIT BOOST</h4>
+                                    <p class="text-gray-400 text-sm mb-3">Double EXP from habits for 24 hours</p>
+                                    <button onclick="craftItem('habitBoost')" class="w-full bg-orange-500/20 hover:bg-orange-500/30 text-orange-400 border border-orange-500/30 py-2 rounded-lg transition-all">
+                                        CRAFT (50 Aether)
+                                    </button>
+                                </div>
+                                <div class="bg-void rounded-xl p-4 border border-purple-500/30">
+                                    <h4 class="font-orbitron text-lg font-bold text-purple-400 mb-2">🧠 FOCUS AMPLIFIER</h4>
+                                    <p class="text-gray-400 text-sm mb-3">+50% EXP from focus sessions</p>
+                                    <button onclick="craftItem('focusAmp')" class="w-full bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 border border-purple-500/30 py-2 rounded-lg transition-all">
+                                        CRAFT (75 Aether)
+                                    </button>
+                                </div>
+                                <div class="bg-void rounded-xl p-4 border border-green-500/30">
+                                    <h4 class="font-orbitron text-lg font-bold text-green-400 mb-2">💚 VITALITY SURGE</h4>
+                                    <p class="text-gray-400 text-sm mb-3">+1 Wellness streak protection</p>
+                                    <button onclick="craftItem('vitalitySurge')" class="w-full bg-green-500/20 hover:bg-green-500/30 text-green-400 border border-green-500/30 py-2 rounded-lg transition-all">
+                                        CRAFT (100 Aether)
+                                    </button>
+                                </div>
+                                <div class="bg-void rounded-xl p-4 border border-gold/30">
+                                    <h4 class="font-orbitron text-lg font-bold text-gold mb-2">⭐ TIER ACCELERATOR</h4>
+                                    <p class="text-gray-400 text-sm mb-3">+100 XP towards next tier</p>
+                                    <button onclick="craftItem('tierAccel')" class="w-full bg-gold/20 hover:bg-gold/30 text-gold border border-gold/30 py-2 rounded-lg transition-all">
+                                        CRAFT (150 Aether)
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NoFap Chamber -->
+                <div id="nofapChamber" class="chamber-content hidden">
+                    <div class="max-w-2xl mx-auto">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+                            <div>
+                                <h2 class="font-orbitron text-3xl font-bold text-purple-400 flex items-center gap-3">🛡️ SELF MASTERY</h2>
+                                <p class="text-gray-400 mt-1">Master yourself, level up</p>
+                            </div>
+                            <button onclick="switchChamber('home')" class="bg-void-lighter hover:bg-void border border-white/10 px-4 py-2 rounded-lg transition-all text-sm">← RETURN TO SYSTEM</button>
+                        </div>
+                        <div class="chamber-card rounded-xl p-8 text-center mb-6" style="box-shadow: 0 0 40px rgba(168, 85, 247, 0.3);">
+                            <div class="relative inline-block mb-6">
+                                <svg class="w-64 h-64">
+                                    <circle cx="128" cy="128" r="120" fill="none" stroke="#1a1a25" stroke-width="12"/>
+                                    <circle id="nofapCircle" cx="128" cy="128" r="120" fill="none" stroke="url(#nofapGradient)" stroke-width="12" stroke-linecap="round" class="progress-ring" stroke-dasharray="754" stroke-dashoffset="754"/>
+                                    <defs>
+                                        <linearGradient id="nofapGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" style="stop-color:#a855f7"/>
+                                            <stop offset="100%" style="stop-color:#06b6d4"/>
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                    <div id="nofapDays" class="font-orbitron text-6xl font-bold text-purple-400">0</div>
+                                    <div class="text-gray-400 text-xl">DAYS</div>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4 mb-6">
+                                <div class="bg-void rounded-lg p-4">
+                                    <div id="nofapBestStreak" class="font-orbitron text-2xl font-bold text-gold">0</div>
+                                    <div class="text-gray-500 text-sm">BEST STREAK</div>
+                                </div>
+                                <div class="bg-void rounded-lg p-4">
+                                    <div id="nofapTotalDays" class="font-orbitron text-2xl font-bold text-aether">0</div>
+                                    <div class="text-gray-500 text-sm">TOTAL DAYS</div>
+                                </div>
+                                <div class="bg-void rounded-lg p-4">
+                                    <div id="nofapRelapses" class="font-orbitron text-2xl font-bold text-red-400">0</div>
+                                    <div class="text-gray-500 text-sm">RELAPSES</div>
+                                </div>
+                            </div>
+                            <button onclick="recordRelapse()" class="bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/30 px-8 py-3 rounded-lg transition-all font-semibold">RELAPSE</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Schedule Chamber -->
+                <div id="scheduleChamber" class="chamber-content hidden">
+                    <div class="max-w-6xl mx-auto">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+                            <div>
+                                <h2 class="font-orbitron text-3xl font-bold text-blue-400 flex items-center gap-3">📅 WEEKLY SCHEDULE</h2>
+                            </div>
+                            <button onclick="switchChamber('home')" class="bg-void-lighter hover:bg-void border border-white/10 px-4 py-2 rounded-lg transition-all text-sm">← RETURN TO SYSTEM</button>
+                        </div>
+                        <div class="grid grid-cols-7 gap-2 mb-4 text-center text-gray-400 text-sm font-semibold">
+                            <div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div><div>SUN</div>
+                        </div>
+                        <div id="weeklySchedule" class="grid grid-cols-7 gap-2"></div>
+                        <div class="chamber-card rounded-xl p-6 mt-6">
+                            <h3 class="font-orbitron text-xl font-bold text-blue-400 mb-4">ADD EVENT</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                <input type="text" id="eventTitle" placeholder="Event title..." class="bg-void border border-white/10 rounded-lg px-4 py-2">
+                                <select id="eventDay" class="bg-void border border-white/10 rounded-lg px-4 py-2">
+                                    <option value="0">Monday</option><option value="1">Tuesday</option><option value="2">Wednesday</option>
+                                    <option value="3">Thursday</option><option value="4">Friday</option><option value="5">Saturday</option><option value="6">Sunday</option>
+                                </select>
+                                <input type="time" id="eventTime" class="bg-void border border-white/10 rounded-lg px-4 py-2">
+                                <button onclick="addScheduleEvent()" class="bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border border-blue-500/30 rounded-lg transition-all">ADD EVENT</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Chamber -->
+                <div id="analyticsChamber" class="chamber-content hidden">
+                    <div class="max-w-6xl mx-auto">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+                            <div>
+                                <h2 class="font-orbitron text-3xl font-bold text-cyan-400 flex items-center gap-3">📊 ANALYTICS</h2>
+                            </div>
+                            <button onclick="switchChamber('home')" class="bg-void-lighter hover:bg-void border border-white/10 px-4 py-2 rounded-lg transition-all text-sm">← RETURN TO SYSTEM</button>
+                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                            <div class="chamber-card rounded-xl p-4 text-center glow-aether">
+                                <div id="totalExp" class="font-orbitron text-3xl font-bold text-aether">0</div>
+                                <div class="text-xs text-gray-500">TOTAL EXP</div>
+                            </div>
+                            <div class="chamber-card rounded-xl p-4 text-center">
+                                <div id="totalLevel" class="font-orbitron text-3xl font-bold text-gold">1</div>
+                                <div class="text-xs text-gray-500">LEVEL</div>
+                            </div>
+                            <div class="chamber-card rounded-xl p-4 text-center">
+                                <div id="totalPerfectDays" class="font-orbitron text-3xl font-bold text-green-400">0</div>
+                                <div class="text-xs text-gray-500">PERFECT DAYS</div>
+                            </div>
+                            <div class="chamber-card rounded-xl p-4 text-center">
+                                <div id="longestStreak" class="font-orbitron text-3xl font-bold text-orange-400">0</div>
+                                <div class="text-xs text-gray-500">LONGEST STREAK</div>
+                            </div>
+                        </div>
+                        <div class="chamber-card rounded-xl p-6">
+                            <h3 class="font-orbitron text-xl font-bold text-cyan-400 mb-4">ACTIVITY HEATMAP (Last 30 Days)</h3>
+                            <div id="heatmapContainer" class="flex flex-wrap gap-1"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation - Mobile -->
+        <nav class="md:hidden bg-void-light border-t border-white/10 px-2 py-2 flex justify-around sticky bottom-0">
+            <button onclick="switchChamber('discipline')" class="flex flex-col items-center p-2 rounded-lg hover:bg-void-lighter transition-all">
+                <span class="text-xl">🎯</span><span class="text-xs text-discipline">Discipline</span>
+            </button>
+            <button onclick="switchChamber('mind')" class="flex flex-col items-center p-2 rounded-lg hover:bg-void-lighter transition-all">
+                <span class="text-xl">🧠</span><span class="text-xs text-mind">Mind</span>
+            </button>
+            <button onclick="switchChamber('home')" class="flex flex-col items-center p-2 rounded-lg hover:bg-void-lighter transition-all">
+                <span class="text-xl">🏠</span><span class="text-xs text-aether">Home</span>
+            </button>
+            <button onclick="switchChamber('strength')" class="flex flex-col items-center p-2 rounded-lg hover:bg-void-lighter transition-all">
+                <span class="text-xl">💪</span><span class="text-xs text-strength">Strength</span>
+            </button>
+            <button onclick="switchChamber('vitality')" class="flex flex-col items-center p-2 rounded-lg hover:bg-void-lighter transition-all">
+                <span class="text-xl">💚</span><span class="text-xs text-vitality">Vitality</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Modals -->
+    <div id="profileModal" class="fixed inset-0 bg-black/80 modal-backdrop z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-void-light rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto slide-in">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="font-orbitron text-2xl font-bold text-aether">PROFILE</h2>
+                    <button onclick="closeModal('profileModal')" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                </div>
+                <div class="flex flex-col items-center mb-6">
+                    <div id="profileAvatar" class="w-24 h-24 bg-gradient-to-br from-aether to-purple-500 rounded-full flex items-center justify-center font-orbitron text-4xl font-bold mb-4 border-4 tier-border-bronze">
+                        <span id="profileInitial">A</span>
+                    </div>
+                    <input type="text" id="profileName" placeholder="Your Name" class="bg-void border border-white/10 rounded-lg px-4 py-2 text-center text-xl font-bold" value="Ascender" onchange="saveUserData()">
+                    <p id="profileRank" class="text-gray-400 mt-2">Bronze Tier</p>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-gray-400 text-sm">Height (cm)</label>
+                        <input type="number" id="profileHeight" value="174" class="w-full bg-void border border-white/10 rounded-lg px-4 py-2 mt-1" onchange="saveUserData()">
+                    </div>
+                    <div>
+                        <label class="text-gray-400 text-sm">Weight (kg)</label>
+                        <input type="number" id="profileWeight" value="70" class="w-full bg-void border border-white/10 rounded-lg px-4 py-2 mt-1" onchange="saveUserData()">
+                    </div>
+                </div>
+                <button onclick="closeModal('profileModal')" class="mt-6 w-full bg-aether hover:bg-aether-dark text-void font-semibold py-3 rounded-lg transition-all">SAVE & CLOSE</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="settingsModal" class="fixed inset-0 bg-black/80 modal-backdrop z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-void-light rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto slide-in">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="font-orbitron text-2xl font-bold text-aether">SETTINGS</h2>
+                    <button onclick="closeModal('settingsModal')" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                </div>
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="font-semibold mb-3">Data Management</h3>
+                        <button onclick="exportData()" class="w-full bg-void hover:bg-void-lighter border border-white/10 py-3 rounded-lg transition-all mb-2">Export Data</button>
+                        <button onclick="resetAllData()" class="w-full bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/30 py-3 rounded-lg transition-all">Reset All Data</button>
+                    </div>
+                </div>
+                <button onclick="closeModal('settingsModal')" class="mt-6 w-full bg-void-lighter hover:bg-void border border-white/10 py-3 rounded-lg transition-all">CLOSE</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="heatInfoModal" class="fixed inset-0 bg-black/80 modal-backdrop z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-void-light rounded-2xl max-w-md w-full slide-in">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="font-orbitron text-2xl font-bold text-orange-400"><svg class="flame-svg inline mr-2" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 2s-4 3-4 7a4 4 0 0 0 4 4 4 4 0 0 0 4-4c0-4-4-7-4-7z" fill="currentColor"/></svg> MOMENTUM HEAT</h2>
+                    <button onclick="closeModal('heatInfoModal')" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                </div>
+                <div class="space-y-4">
+                    <p class="text-gray-400">Your Momentum Heat tracks daily alignment consistency. Complete 70%+ of tasks to heat up!</p>
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-3 p-2 bg-void rounded-lg"><span class="flame flame-cold"><svg class="flame-svg" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 2s-4 3-4 7a4 4 0 0 0 4 4 4 4 0 0 0 4-4c0-4-4-7-4-7z" fill="currentColor"/></svg></span><span class="text-gray-400">Cold - Starting point</span></div>
+                        <div class="flex items-center gap-3 p-2 bg-void rounded-lg"><span class="flame flame-warm"><svg class="flame-svg" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 2s-4 3-4 7a4 4 0 0 0 4 4 4 4 0 0 0 4-4c0-4-4-7-4-7z" fill="currentColor"/></svg></span><span class="text-orange-300">Warm - 2+ aligned days</span></div>
+                        <div class="flex items-center gap-3 p-2 bg-void rounded-lg"><span class="flame flame-hot"><svg class="flame-svg" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 2s-4 3-4 7a4 4 0 0 0 4 4 4 4 0 0 0 4-4c0-4-4-7-4-7z" fill="currentColor"/></svg></span><span class="text-orange-400">Hot - 5+ aligned days</span></div>
+                        <div class="flex items-center gap-3 p-2 bg-void rounded-lg"><span class="flame flame-burning"><svg class="flame-svg" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 2s-4 3-4 7a4 4 0 0 0 4 4 4 4 0 0 0 4-4c0-4-4-7-4-7z" fill="currentColor"/></svg></span><span class="text-red-400">Burning - 10+ aligned days</span></div>
+                        <div class="flex items-center gap-3 p-2 bg-void rounded-lg"><span class="flame flame-blazing"><svg class="flame-svg" viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M12 2s-4 3-4 7a4 4 0 0 0 4 4 4 4 0 0 0 4-4c0-4-4-7-4-7z" fill="currentColor"/></svg></span><span class="text-purple-400">Blazing - 20+ days (+2x Aether!)</span></div>
+                    </div>
+                </div>
+                <button onclick="closeModal('heatInfoModal')" class="mt-6 w-full bg-orange-500/20 hover:bg-orange-500/30 text-orange-400 border border-orange-500/30 py-3 rounded-lg transition-all">GOT IT!</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="addHabitModal" class="fixed inset-0 bg-black/80 modal-backdrop z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-void-light rounded-2xl max-w-md w-full slide-in">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="font-orbitron text-2xl font-bold text-discipline">ADD HABIT</h2>
+                    <button onclick="closeModal('addHabitModal')" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                </div>
+                <input type="text" id="newHabitName" placeholder="Habit name..." class="w-full bg-void border border-white/10 rounded-lg px-4 py-3 mb-4">
+                <input type="hidden" id="newHabitCategory">
+                <button onclick="confirmAddHabit()" class="w-full bg-discipline hover:bg-discipline/80 text-void font-semibold py-3 rounded-lg transition-all">ADD HABIT</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-24 md:bottom-8 left-1/2 transform -translate-x-1/2 bg-void-light border border-aether/30 px-6 py-3 rounded-lg shadow-lg hidden z-50">
+        <div class="flex items-center gap-3">
+            <span id="toastIcon">✓</span>
+            <span id="toastMessage">Action completed!</span>
+        </div>
+    </div>
+
+    <script>
+        // ==================== CONSTANTS ====================
+        const TIERS = [
+            { name: 'Bronze', xpRequired: 0, color: 'bronze' },
+            { name: 'Silver', xpRequired: 500, color: 'silver' },
+            { name: 'Gold', xpRequired: 1500, color: 'gold' },
+            { name: 'Platinum', xpRequired: 4000, color: 'platinum' },
+            { name: 'Diamond', xpRequired: 10000, color: 'diamond' },
+            { name: 'Emerald', xpRequired: 25000, color: 'emerald' }
+        ];
+
+        const HEAT_LEVELS = [
+            { name: 'Cold', days: 0, class: 'flame-cold' },
+            { name: 'Warm', days: 2, class: 'flame-warm' },
+            { name: 'Hot', days: 5, class: 'flame-hot' },
+            { name: 'Burning', days: 10, class: 'flame-burning' },
+            { name: 'Blazing', days: 20, class: 'flame-blazing' }
+        ];
+
+        const DAILY_QUOTES = [
+            "The only way to do great work is to love what you do.",
+            "Success is not final, failure is not fatal: it is the courage to continue that counts.",
+            "Believe you can and you're halfway there.",
+            "It does not matter how slowly you go as long as you do not stop.",
+            "The future belongs to those who believe in the beauty of their dreams.",
+            "Don't watch the clock; do what it does. Keep going.",
+            "Everything you've ever wanted is on the other side of fear.",
+            "The harder you work for something, the greater you'll feel when you achieve it.",
+            "Dream bigger. Do bigger.",
+            "Push yourself, because no one else is going to do it for you.",
+            "Great things never come from comfort zones.",
+            "Success doesn't just find you. You have to go out and get it.",
+            "The key to success is to focus on goals, not obstacles.",
+            "Dream it. Wish it. Do it.",
+            "Wake up with determination. Go to bed with satisfaction."
+        ];
+
+        const DEFAULT_DATA = {
+            user: { name: 'Ascender', height: 174, weight: 70, bodyType: 'Skinny-Fat', level: 1, aether: 0, tierXP: 0, tier: 0 },
+            stats: { vitality: { level: 1, exp: 0 }, discipline: { level: 1, exp: 0 }, intelligence: { level: 1, exp: 0 }, practical: { level: 1, exp: 0 }, strength: { level: 1, exp: 0 } },
+            habits: {
+                morning: [{ id: 1, name: 'Make bed', completed: false, streak: 0 }, { id: 2, name: 'Morning meditation (5min)', completed: false, streak: 0 }],
+                daily: [{ id: 3, name: 'Review daily goals', completed: false, streak: 0 }, { id: 4, name: 'Read for 30 minutes', completed: false, streak: 0 }],
+                evening: [{ id: 5, name: 'Plan tomorrow', completed: false, streak: 0 }, { id: 6, name: 'Gratitude reflection', completed: false, streak: 0 }]
+            },
+            streaks: { discipline: 0, mind: 0, strength: 0, vitality: 0, nofap: 0, nofapBest: 0, nofapRelapses: 0, nofapStartDate: null },
+            heat: { level: 0, alignedDays: 0, lastAlignedDate: null },
+            workouts: [{ id: 1, name: 'Push-ups', targetReps: 20, currentReps: 0 }, { id: 2, name: 'Squats', targetReps: 20, currentReps: 0 }],
+            studyQuests: [],
+            nutrition: { protein: 0, water: 0 },
+            vitality: { mood: 4, gratitudes: [], meditationMinutes: 0, mindfulStreak: 0 },
+            schedule: [[], [], [], [], [], [], []],
+            analytics: { perfectDays: 0, totalExp: 0, habitsCompleted: 0, focusSessions: 0, focusMinutes: 0, workoutsCompleted: 0, activityHistory: {} },
+            lastActiveDate: null,
+            todayExp: 0,
+            quoteIndex: 0
+        };
+
+        let appData = JSON.parse(localStorage.getItem('ascenderData')) || JSON.parse(JSON.stringify(DEFAULT_DATA));
+
+        // ==================== CORE FUNCTIONS ====================
+        function saveData() { localStorage.setItem('ascenderData', JSON.stringify(appData)); }
+
+        function getTier() { return TIERS[appData.user.tier] || TIERS[0]; }
+        function getNextTier() { return TIERS[appData.user.tier + 1] || null; }
+
+        function getHeatLevel() {
+            for (let i = HEAT_LEVELS.length - 1; i >= 0; i--) {
+                if (appData.heat.alignedDays >= HEAT_LEVELS[i].days) return HEAT_LEVELS[i];
+            }
+            return HEAT_LEVELS[0];
+        }
+
+        function getDailyAlignment() {
+            const allHabits = [...appData.habits.morning, ...appData.habits.daily, ...appData.habits.evening];
+            if (allHabits.length === 0) return 0;
+            return (allHabits.filter(h => h.completed).length / allHabits.length) * 100;
+        }
+
+        function checkDayReset() {
+            const today = new Date().toDateString();
+            if (appData.lastActiveDate !== today) {
+                // Check yesterday's alignment for heat
+                const alignment = getDailyAlignment();
+                if (alignment >= 70) {
+                    appData.heat.alignedDays++;
+                    if (appData.heat.alignedDays >= 20) appData.user.aether += 5; // Blazing bonus
+                } else if (alignment < 50) {
+                    appData.heat.alignedDays = Math.max(0, appData.heat.alignedDays - 1);
+                }
+                appData.heat.lastAlignedDate = appData.lastActiveDate;
+
+                // Check for perfect day
+                const allHabits = [...appData.habits.morning, ...appData.habits.daily, ...appData.habits.evening];
+                if (allHabits.length > 0 && allHabits.every(h => h.completed)) {
+                    appData.analytics.perfectDays++;
+                    appData.streaks.discipline++;
+                }
+
+                // Reset daily items
+                appData.habits.morning.forEach(h => h.completed = false);
+                appData.habits.daily.forEach(h => h.completed = false);
+                appData.habits.evening.forEach(h => h.completed = false);
+                appData.workouts.forEach(w => w.currentReps = 0);
+                appData.nutrition = { protein: 0, water: 0 };
+                appData.vitality.meditationMinutes = 0;
+                appData.vitality.gratitudes = [];
+                appData.todayExp = 0;
+                
+                // Rotate daily quote
+                appData.quoteIndex = (appData.quoteIndex + 1) % DAILY_QUOTES.length;
+                
+                appData.lastActiveDate = today;
+                saveData();
+            }
+        }
+
+        function init() {
+            checkDayReset();
+            updateNofapStreak();
+            renderAllChambers();
+            updateAllDisplays();
+            updateTierDisplay();
+            updateHeatDisplay();
+            updateForgeAccess();
+            switchChamber('home');
+        }
+
+        // ==================== TIER SYSTEM ====================
+        function updateTierDisplay() {
+            const tier = getTier();
+            const nextTier = getNextTier();
+            const tierColor = tier.color;
+
+            // Update tier badge
+            const badge = document.getElementById('tierBadge');
+            badge.textContent = `${tier.name.toUpperCase()} TIER`;
+            badge.className = `px-3 py-1 rounded-full text-xs font-bold tier-badge-${tierColor} text-void`;
+
+            // Update name colors
+            const homeName = document.getElementById('homeName');
+            homeName.className = `tier-${tierColor}`;
+
+            // Update borders
+            ['welcomeCard', 'sidebarCard'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.classList.remove(...Array.from(el.classList).filter(c => c.startsWith('tier-border-')));
+                    el.classList.add(`tier-border-${tierColor}`);
+                }
+            });
+
+            ['homeAvatar', 'sidebarAvatar', 'profileAvatar', 'userAvatarHeader'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.classList.remove(...Array.from(el.classList).filter(c => c.startsWith('tier-border-')));
+                    el.classList.add(`tier-border-${tierColor}`);
+                    el.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue(`--tier-${tierColor}`) || '';
+                }
+            });
+
+            // Update progress bar
+            if (nextTier) {
+                const currentXP = appData.user.tierXP;
+                const neededXP = nextTier.xpRequired - tier.xpRequired;
+                const progressXP = currentXP - tier.xpRequired;
+                const percentage = Math.min((progressXP / neededXP) * 100, 100);
+                document.getElementById('tierProgressBar').style.width = `${percentage}%`;
+                document.getElementById('tierProgressText').textContent = `${progressXP} / ${neededXP} XP`;
+            } else {
+                document.getElementById('tierProgressBar').style.width = '100%';
+                document.getElementById('tierProgressText').textContent = 'MAX TIER';
+            }
+
+            // Update rank displays
+            const rankText = `${tier.name} Tier`;
+            ['sidebarRank', 'homeRank', 'profileRank'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = rankText;
+            });
+        }
+
+        function addTierXP(amount) {
+            appData.user.tierXP += amount;
+            // Check for tier up
+            while (appData.user.tier < TIERS.length - 1 && appData.user.tierXP >= TIERS[appData.user.tier + 1].xpRequired) {
+                appData.user.tier++;
+                showToast(`🎉 TIER UP! You are now ${TIERS[appData.user.tier].name} Tier!`, '⬆️');
+                if (appData.user.tier === 1) updateForgeAccess(); // Unlock forge at Silver
+            }
+            saveData();
+            updateTierDisplay();
+        }
+
+        function updateForgeAccess() {
+            const forgeBtn = document.getElementById('forgeBtn');
+            if (appData.user.tier >= 1) { // Silver or above
+                forgeBtn.classList.remove('locked-feature', 'locked-overlay');
+            } else {
+                forgeBtn.classList.add('locked-feature', 'locked-overlay');
+            }
+        }
+
+        // ==================== HEAT SYSTEM ====================
+        function updateHeatDisplay() {
+            const heat = getHeatLevel();
+            const flame = document.getElementById('momentumFlame');
+            flame.className = `flame ${heat.class}`;
+            document.getElementById('heatLevel').textContent = heat.name;
+            document.getElementById('heatStreak').textContent = `${appData.heat.alignedDays} days`;
+            document.getElementById('homeHeat').textContent = heat.name;
+        }
+
+        function showHeatInfo() { openModal('heatInfoModal'); }
+
+        // ==================== CHAMBER SWITCHING ====================
+        function switchChamber(chamber) {
+            if (chamber === 'forge' && appData.user.tier < 1) {
+                showToast('🔒 Reach Silver Tier to unlock The Forge!', '🔒');
+                return;
+            }
+            document.querySelectorAll('.chamber-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`${chamber}Chamber`).classList.remove('hidden');
+            document.querySelectorAll('.chamber-nav-btn').forEach(btn => {
+                btn.classList.remove('bg-white/10');
+                if (btn.dataset.chamber === chamber) btn.classList.add('bg-white/10');
+            });
+            if (chamber === 'analytics') renderHeatmap();
+            if (chamber === 'schedule') renderSchedule();
+        }
+
+        // ==================== HABITS ====================
+        function renderHabits(category, containerId) {
+            const container = document.getElementById(containerId);
+            const habits = appData.habits[category];
+            container.innerHTML = habits.map(habit => `
+                <div class="flex items-center justify-between p-3 bg-void rounded-lg slide-in">
+                    <div class="flex items-center gap-3">
+                        <button onclick="toggleHabit('${category}', ${habit.id})" 
+                            class="w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all
+                            ${habit.completed ? 'bg-green-500 border-green-500' : 'border-gray-600 hover:border-green-500'}">
+                            ${habit.completed ? '✓' : ''}
+                        </button>
+                        <span class="${habit.completed ? 'text-gray-500 line-through' : ''}">${habit.name}</span>
+                    </div>
+                    <button onclick="deleteHabit('${category}', ${habit.id})" class="text-red-400 hover:text-red-300 text-sm">×</button>
+                </div>
+            `).join('');
+        }
+
+        function toggleHabit(category, id) {
+            const habit = appData.habits[category].find(h => h.id === id);
+            if (habit) {
+                habit.completed = !habit.completed;
+                if (habit.completed) {
+                    habit.streak++;
+                    addExp('discipline', 10);
+                    addTierXP(5);
+                    appData.analytics.habitsCompleted++;
+                    showToast('Habit completed! +10 EXP', '✓');
+                }
+                saveData();
+                renderAllChambers();
+                updateAllDisplays();
+            }
+        }
+
+        function addHabit(category) {
+            document.getElementById('newHabitCategory').value = category;
+            document.getElementById('newHabitName').value = '';
+            openModal('addHabitModal');
+        }
+
+        function confirmAddHabit() {
+            const name = document.getElementById('newHabitName').value.trim();
+            const category = document.getElementById('newHabitCategory').value;
+            if (name) {
+                appData.habits[category].push({ id: Date.now(), name, completed: false, streak: 0 });
+                saveData();
+                renderAllChambers();
+                closeModal('addHabitModal');
+                showToast('Habit added!', '✓');
+            }
+        }
+
+        function deleteHabit(category, id) {
+            appData.habits[category] = appData.habits[category].filter(h => h.id !== id);
+            saveData();
+            renderAllChambers();
+            updateAllDisplays();
+        }
+
+        // ==================== TIMER ====================
+        let timerInterval = null, timerSeconds = 25 * 60, timerTotalSeconds = 25 * 60, isTimerRunning = false, isBreakMode = false;
+
+        function startTimer() {
+            if (isTimerRunning) {
+                clearInterval(timerInterval);
+                isTimerRunning = false;
+                document.getElementById('timerStartBtn').textContent = 'START';
+            } else {
+                isTimerRunning = true;
+                document.getElementById('timerStartBtn').textContent = 'PAUSE';
+                timerInterval = setInterval(() => {
+                    timerSeconds--;
+                    updateTimerDisplay();
+                    if (timerSeconds <= 0) {
+                        clearInterval(timerInterval);
+                        isTimerRunning = false;
+                        document.getElementById('timerStartBtn').textContent = 'START';
+                        if (!isBreakMode) {
+                            appData.analytics.focusSessions++;
+                            appData.analytics.focusMinutes += parseInt(document.getElementById('workDuration').value);
+                            addExp('intelligence', 25);
+                            addTierXP(15);
+                            showToast('Focus session complete! +25 EXP', '🎯');
+                        }
+                        saveData();
+                    }
+                }, 1000);
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            timerSeconds = (isBreakMode ? parseInt(document.getElementById('breakDuration').value) : parseInt(document.getElementById('workDuration').value)) * 60;
+            timerTotalSeconds = timerSeconds;
+            document.getElementById('timerStartBtn').textContent = 'START';
+            updateTimerDisplay();
+        }
+
+        function switchToBreak() {
+            isBreakMode = !isBreakMode;
+            resetTimer();
+            document.getElementById('timerMode').textContent = isBreakMode ? 'BREAK MODE' : 'FOCUS MODE';
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(timerSeconds / 60);
+            const secs = timerSeconds % 60;
+            document.getElementById('timerDisplay').textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            const circle = document.getElementById('timerCircle');
+            const circumference = 2 * Math.PI * 88;
+            circle.style.strokeDasharray = circumference;
+            circle.style.strokeDashoffset = circumference * (1 - timerSeconds / timerTotalSeconds);
+        }
+
+        // ==================== STUDY QUESTS ====================
+        function addStudyQuest() {
+            const input = document.getElementById('newStudyQuest');
+            const name = input.value.trim();
+            if (name) {
+                appData.studyQuests.push({ id: Date.now(), name, completed: false });
+                saveData();
+                renderStudyQuests();
+                input.value = '';
+            }
+        }
+
+        function loadStudyQuests() {
+            appData.studyQuests = ['Math homework', 'Read chapter 5', 'Practice problems'].map((name, i) => ({ id: Date.now() + i, name, completed: false }));
+            saveData();
+            renderStudyQuests();
+            showToast('Quests loaded!', '📚');
+        }
+
+        function renderStudyQuests() {
+            const container = document.getElementById('studyQuests');
+            if (appData.studyQuests.length === 0) {
+                container.innerHTML = '<div class="text-gray-500 text-center py-4">No quests. Add one or click LOAD.</div>';
+                return;
+            }
+            container.innerHTML = appData.studyQuests.map(q => `
+                <div class="flex items-center justify-between p-3 bg-void rounded-lg">
+                    <div class="flex items-center gap-3">
+                        <button onclick="toggleStudyQuest(${q.id})" class="w-6 h-6 rounded border-2 flex items-center justify-center ${q.completed ? 'bg-mind border-mind' : 'border-gray-600'}">
+                            ${q.completed ? '✓' : ''}
+                        </button>
+                        <span class="${q.completed ? 'text-gray-500 line-through' : ''}">${q.name}</span>
+                    </div>
+                    <button onclick="deleteStudyQuest(${q.id})" class="text-red-400">×</button>
+                </div>
+            `).join('');
+        }
+
+        function toggleStudyQuest(id) {
+            const q = appData.studyQuests.find(x => x.id === id);
+            if (q) {
+                q.completed = !q.completed;
+                if (q.completed) { addExp('intelligence', 15); addTierXP(8); showToast('Quest done! +15 EXP', '📚'); }
+                saveData();
+                renderStudyQuests();
+            }
+        }
+
+        function deleteStudyQuest(id) {
+            appData.studyQuests = appData.studyQuests.filter(q => q.id !== id);
+            saveData();
+            renderStudyQuests();
+        }
+
+        // ==================== WORKOUTS ====================
+        function renderWorkoutQuests() {
+            const container = document.getElementById('workoutQuests');
+            if (appData.workouts.length === 0) {
+                container.innerHTML = '<div class="text-gray-500 text-center py-4">No exercises added.</div>';
+                return;
+            }
+            container.innerHTML = appData.workouts.map(w => `
+                <div class="flex items-center justify-between p-3 bg-void rounded-lg">
+                    <span class="${w.currentReps >= w.targetReps ? 'text-green-400' : ''}">${w.name} (${w.currentReps}/${w.targetReps})</span>
+                    <div class="flex items-center gap-2">
+                        <button onclick="adjustReps(${w.id}, -1)" class="w-8 h-8 bg-void-lighter rounded-full text-red-400">-</button>
+                        <button onclick="adjustReps(${w.id}, 1)" class="w-8 h-8 bg-void-lighter rounded-full text-green-400">+</button>
+                        <button onclick="deleteWorkout(${w.id})" class="text-red-400 ml-2">×</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addWorkoutQuest() {
+            const name = document.getElementById('newExerciseName').value.trim();
+            const reps = parseInt(document.getElementById('newExerciseReps').value) || 20;
+            if (name) {
+                appData.workouts.push({ id: Date.now(), name, targetReps: reps, currentReps: 0 });
+                saveData();
+                renderWorkoutQuests();
+                document.getElementById('newExerciseName').value = '';
+            }
+        }
+
+        function adjustReps(id, delta) {
+            const w = appData.workouts.find(x => x.id === id);
+            if (w) {
+                const wasComplete = w.currentReps >= w.targetReps;
+                w.currentReps = Math.max(0, w.currentReps + delta);
+                if (!wasComplete && w.currentReps >= w.targetReps) {
+                    addExp('strength', 20);
+                    addTierXP(10);
+                    appData.analytics.workoutsCompleted++;
+                    showToast('Exercise done! +20 EXP', '💪');
+                }
+                saveData();
+                renderWorkoutQuests();
+                updateAllDisplays();
+            }
+        }
+
+        function deleteWorkout(id) {
+            appData.workouts = appData.workouts.filter(w => w.id !== id);
+            saveData();
+            renderWorkoutQuests();
+        }
+
+        // ==================== NUTRITION ====================
+        function updateNutrition() {
+            appData.nutrition.protein = parseInt(document.getElementById('proteinIntake').value) || 0;
+            saveData();
+        }
+
+        function drinkWater() {
+            if (appData.nutrition.water < 8) {
+                appData.nutrition.water++;
+                addExp('vitality', 5);
+                saveData();
+                renderWaterGlasses();
+                updateAllDisplays();
+            }
+        }
+
+        function renderWaterGlasses() {
+            const container = document.getElementById('waterGlasses');
+            container.innerHTML = Array(8).fill(0).map((_, i) => `<div class="w-5 h-5 rounded ${i < appData.nutrition.water ? 'bg-blue-500' : 'bg-gray-700'} text-xs flex items-center justify-center">💧</div>`).join('');
+            document.getElementById('waterProgress').textContent = `${appData.nutrition.water}/8`;
+            document.getElementById('todayWaterGlasses').textContent = `${appData.nutrition.water}/8`;
+        }
+
+        // ==================== VITALITY ====================
+        function selectMood(mood) {
+            appData.vitality.mood = mood;
+            const labels = ['Very Sad', 'Sad', 'Down', 'Balanced', 'Good', 'Happy', 'Amazing'];
+            document.getElementById('moodLabel').textContent = labels[mood - 1];
+            document.querySelectorAll('.mood-btn').forEach(btn => {
+                btn.classList.remove('bg-yellow-500/20', 'ring-2', 'ring-yellow-400');
+                if (parseInt(btn.dataset.mood) === mood) btn.classList.add('bg-yellow-500/20', 'ring-2', 'ring-yellow-400');
+            });
+            saveData();
+        }
+
+        function addGratitude() {
+            const input = document.getElementById('newGratitude');
+            const text = input.value.trim();
+            if (text && appData.vitality.gratitudes.length < 5) {
+                appData.vitality.gratitudes.push(text);
+                addExp('vitality', 10);
+                addTierXP(5);
+                saveData();
+                renderGratitudes();
+                input.value = '';
+            }
+        }
+
+        function renderGratitudes() {
+            const container = document.getElementById('gratitudeList');
+            document.getElementById('gratitudeCount').textContent = `${appData.vitality.gratitudes.length}/5`;
+            container.innerHTML = appData.vitality.gratitudes.length === 0 ? '' : appData.vitality.gratitudes.map((g, i) => `
+                <div class="flex items-center justify-between p-2 bg-void rounded-lg">
+                    <span class="text-pink-300">🙏 ${g}</span>
+                    <button onclick="appData.vitality.gratitudes.splice(${i},1);saveData();renderGratitudes();" class="text-red-400">×</button>
+                </div>
+            `).join('');
+        }
+
+        function logMeditation() {
+            const duration = parseInt(document.getElementById('meditationDuration').value) || 10;
+            appData.vitality.meditationMinutes += duration;
+            appData.vitality.mindfulStreak++;
+            addExp('vitality', duration);
+            addTierXP(duration);
+            showToast(`Meditation logged! +${duration} EXP`, '🧘');
+            saveData();
+            updateAllDisplays();
+        }
+
+        // ==================== NOFAP ====================
+        function updateNofapStreak() {
+            if (!appData.streaks.nofapStartDate) {
+                appData.streaks.nofapStartDate = new Date().toISOString();
+                saveData();
+            }
+            const days = Math.floor((new Date() - new Date(appData.streaks.nofapStartDate)) / (1000 * 60 * 60 * 24));
+            appData.streaks.nofap = days;
+            if (days > appData.streaks.nofapBest) appData.streaks.nofapBest = days;
+            
+            const circle = document.getElementById('nofapCircle');
+            const circumference = 2 * Math.PI * 120;
+            circle.style.strokeDasharray = circumference;
+            circle.style.strokeDashoffset = circumference * (1 - Math.min(days / 90, 1));
+            
+            document.getElementById('nofapDays').textContent = days;
+            document.getElementById('nofapBestStreak').textContent = appData.streaks.nofapBest;
+            document.getElementById('nofapTotalDays').textContent = days;
+            document.getElementById('nofapRelapses').textContent = appData.streaks.nofapRelapses;
+        }
+
+        function recordRelapse() {
+            if (confirm('Record a relapse? Your streak will reset.')) {
+                appData.streaks.nofapRelapses++;
+                appData.streaks.nofapStartDate = new Date().toISOString();
+                saveData();
+                updateNofapStreak();
+                showToast('Stay strong. Rise again.', '🛡️');
+            }
+        }
+
+        // ==================== SCHEDULE ====================
+        function renderSchedule() {
+            const container = document.getElementById('weeklySchedule');
+            container.innerHTML = '';
+            for (let d = 0; d < 7; d++) {
+                const events = (appData.schedule[d] || []).sort((a, b) => a.time.localeCompare(b.time));
+                container.innerHTML += `<div class="chamber-card rounded-lg p-2 min-h-[150px]">
+                    ${events.map(e => `<div class="text-xs bg-blue-500/20 text-blue-400 p-1 rounded mb-1">${e.time}<br>${e.title}</div>`).join('')}
+                </div>`;
+            }
+        }
+
+        function addScheduleEvent() {
+            const title = document.getElementById('eventTitle').value.trim();
+            const day = parseInt(document.getElementById('eventDay').value);
+            const time = document.getElementById('eventTime').value;
+            if (title && time) {
+                if (!appData.schedule[day]) appData.schedule[day] = [];
+                appData.schedule[day].push({ id: Date.now().toString(), title, time });
+                saveData();
+                renderSchedule();
+                document.getElementById('eventTitle').value = '';
+            }
+        }
+
+        // ==================== ANALYTICS ====================
+        function renderHeatmap() {
+            const container = document.getElementById('heatmapContainer');
+            container.innerHTML = '';
+            const today = new Date();
+            for (let i = 29; i >= 0; i--) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                const activity = appData.analytics.activityHistory[date.toDateString()] || 0;
+                let color = 'bg-gray-700';
+                if (activity > 0) color = 'bg-green-900';
+                if (activity > 25) color = 'bg-green-700';
+                if (activity > 50) color = 'bg-green-500';
+                container.innerHTML += `<div class="w-4 h-4 ${color} rounded-sm"></div>`;
+            }
+        }
+
+        // ==================== EXP SYSTEM ====================
+        function addExp(stat, amount) {
+            const heatBonus = getHeatLevel().name === 'Blazing' ? 2 : 1;
+            amount *= heatBonus;
+            appData.stats[stat].exp += amount;
+            appData.analytics.totalExp += amount;
+            appData.todayExp += amount;
+            appData.user.aether += Math.floor(amount / 10);
+            
+            const needed = appData.stats[stat].level * 100;
+            while (appData.stats[stat].exp >= needed) {
+                appData.stats[stat].exp -= needed;
+                appData.stats[stat].level++;
+                appData.user.level = Math.floor(Object.values(appData.stats).reduce((a, s) => a + s.level, 0) / 5);
+                showToast(`Level up! ${stat} is now level ${appData.stats[stat].level}!`, '⬆️');
+            }
+            
+            const today = new Date().toDateString();
+            appData.analytics.activityHistory[today] = (appData.analytics.activityHistory[today] || 0) + 1;
+            
+            saveData();
+            updateAllDisplays();
+        }
+
+        // ==================== FORGE ====================
+        function craftItem(item) {
+            const costs = { habitBoost: 50, focusAmp: 75, vitalitySurge: 100, tierAccel: 150 };
+            if (appData.user.aether >= costs[item]) {
+                appData.user.aether -= costs[item];
+                if (item === 'tierAccel') addTierXP(100);
+                saveData();
+                updateAllDisplays();
+                showToast('Item crafted successfully!', '⚒️');
+            } else {
+                showToast('Not enough Aether!', '❌');
+            }
+        }
+
+        // ==================== DISPLAY UPDATES ====================
+        function updateAllDisplays() {
+            const user = appData.user;
+            const initial = user.name.charAt(0).toUpperCase();
+            
+            ['userInitial', 'sidebarInitial', 'homeInitial', 'profileInitial'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = initial;
+            });
+            ['userName', 'sidebarName', 'homeName'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = user.name;
+            });
+            
+            document.getElementById('sidebarLevel').textContent = user.level;
+            document.getElementById('sidebarAether').textContent = user.aether;
+            document.getElementById('homeLevel').textContent = user.level;
+            document.getElementById('homeAether').textContent = user.aether;
+            
+            // Daily quote
+            document.getElementById('dailyQuote').textContent = `"${DAILY_QUOTES[appData.quoteIndex]}"`;
+            document.getElementById('motivationalQuote').textContent = `"${DAILY_QUOTES[appData.quoteIndex]}"`;
+            
+            // Stats
+            Object.keys(appData.stats).forEach(stat => {
+                const s = appData.stats[stat];
+                const capStat = stat.charAt(0).toUpperCase() + stat.slice(1);
+                const levelEl = document.getElementById(`stat${capStat}`);
+                const expEl = document.getElementById(`stat${capStat}Exp`);
+                if (levelEl) levelEl.textContent = `Lvl.${s.level}`;
+                if (expEl) expEl.textContent = s.exp;
+            });
+            
+            // Discipline
+            const allHabits = [...appData.habits.morning, ...appData.habits.daily, ...appData.habits.evening];
+            const completed = allHabits.filter(h => h.completed).length;
+            const progress = allHabits.length > 0 ? Math.round((completed / allHabits.length) * 100) : 0;
+            document.getElementById('disciplineProgress').textContent = `${progress}%`;
+            document.getElementById('disciplineStreak').textContent = appData.streaks.discipline;
+            document.getElementById('disciplinePerfectDays').textContent = appData.analytics.perfectDays;
+            document.getElementById('disciplineCompleted').textContent = completed;
+            document.getElementById('disciplineExp').textContent = appData.stats.discipline.exp;
+            document.getElementById('habitsRemaining').textContent = allHabits.length - completed;
+            
+            document.getElementById('topStreak').textContent = `${Math.max(...Object.values(appData.streaks).filter(v => typeof v === 'number'))} Day Streak`;
+            document.getElementById('studyStreak').textContent = appData.streaks.mind;
+            document.getElementById('strengthStreak').textContent = appData.streaks.strength;
+            document.getElementById('wellnessStreak').textContent = appData.streaks.vitality;
+            
+            document.getElementById('homeDisciplineStreak').textContent = `${appData.streaks.discipline} days`;
+            document.getElementById('homeMindStreak').textContent = `${appData.streaks.mind} days`;
+            document.getElementById('homeStrengthStreak').textContent = `${appData.streaks.strength} days`;
+            document.getElementById('homeVitalityStreak').textContent = `${appData.streaks.vitality} days`;
+            
+            const completedWorkouts = appData.workouts.filter(w => w.currentReps >= w.targetReps).length;
+            document.getElementById('strengthCompleted').textContent = completedWorkouts;
+            document.getElementById('strengthTotalStreak').textContent = appData.streaks.strength;
+            document.getElementById('strengthExp').textContent = appData.stats.strength.exp;
+            
+            document.getElementById('meditationMinutes').textContent = appData.vitality.meditationMinutes;
+            document.getElementById('mindfulStreak').textContent = appData.vitality.mindfulStreak;
+            
+            document.getElementById('todayHabitsCompleted').textContent = completed;
+            document.getElementById('todayFocusMinutes').textContent = appData.analytics.focusMinutes;
+            document.getElementById('todayExpEarned').textContent = appData.todayExp;
+            
+            document.getElementById('totalExp').textContent = appData.analytics.totalExp;
+            document.getElementById('totalLevel').textContent = user.level;
+            document.getElementById('totalPerfectDays').textContent = appData.analytics.perfectDays;
+            document.getElementById('longestStreak').textContent = Math.max(...Object.values(appData.streaks).filter(v => typeof v === 'number'));
+            
+            document.getElementById('profileName').value = user.name;
+            document.getElementById('profileHeight').value = user.height;
+            document.getElementById('profileWeight').value = user.weight;
+            document.getElementById('bodyType').value = user.bodyType;
+            document.getElementById('proteinIntake').value = appData.nutrition.protein;
+            
+            updateHeatDisplay();
+            updateTierDisplay();
+        }
+
+        function renderAllChambers() {
+            renderHabits('morning', 'morningHabits');
+            renderHabits('daily', 'dailyHabits');
+            renderHabits('evening', 'eveningHabits');
+            renderStudyQuests();
+            renderWorkoutQuests();
+            renderWaterGlasses();
+            renderGratitudes();
+            selectMood(appData.vitality.mood);
+        }
+
+        function saveUserData() {
+            appData.user.name = document.getElementById('profileName').value || 'Ascender';
+            appData.user.height = parseInt(document.getElementById('profileHeight').value) || 174;
+            appData.user.weight = parseInt(document.getElementById('profileWeight').value) || 70;
+            appData.user.bodyType = document.getElementById('bodyType').value;
+            saveData();
+            updateAllDisplays();
+        }
+
+        function exportData() {
+            const blob = new Blob([JSON.stringify(appData, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `ascender-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            showToast('Data exported!', '💾');
+        }
+
+        function resetAllData() {
+            if (confirm('Reset ALL data? This cannot be undone!')) {
+                appData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+                saveData();
+                location.reload();
+            }
+        }
+
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); if (id === 'profileModal') saveUserData(); }
+
+        function showToast(message, icon = '✓') {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').textContent = message;
+            document.getElementById('toastIcon').textContent = icon;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        init();
+    </script>
+</body>
+</html>
+
